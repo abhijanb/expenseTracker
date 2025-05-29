@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+.bg-sidebar {
+    background: #161b22;
+}
+
+.text-sidebar {
+    color: #c9d1d9;
+}
+
+.bg-sidebar-hover {
+    background: #0d1117;
+}
+
+.bg-main {
+    background: #0d1117;
+}
+
+.bg-card {
+    background: #161b22;
+}
+
+.text-primary {
+    color: #c9d1d9;
+}
+
+.text-secondary {
+    color: #8b949e;
+}
+
+.border-default {
+    border-color: #30363d;
+}
+
+.bg-button {
+    background: #238636;
+    color: #ffffff;
+}
+
+.bg-button-hover {
+    background: #2ea043;
+}
+
+.color-highlight {
+    color: #39d353;
+}
+
+.color-link {
+    color: #58a6ff;
+}
+
+.color-icon {
+    color: #8b949e;
+}
