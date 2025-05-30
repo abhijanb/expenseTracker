@@ -1,11 +1,10 @@
 import Layout from './Layout'
-import Content from './Content'
-
+import TripComponent from '../components/Trip'
 const Trip = () => {
   return (
     <Layout>
       {/* Main Content */}
-      <Content />
+      <TripComponent />
 </Layout>
   )
 }

@@ -1,23 +1,148 @@
-import { Filter } from "lucide-react";
+import { Delete, Filter, Trash } from "lucide-react";
 import { Checkbox } from "../components/ui/checkbox";
 import Layout from "./Layout";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import UseLocalStorage from "../hook/UseLocalStorage";
+import { Button } from "../components/ui/button";
 
 const Expenses = () => {
+  const [expensesToggle, setToggle] = useState(false);
+  const [value,setValue] = UseLocalStorage("expenses",[])
+const [checkToggle,setCheckToggle] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  const expenseAdd = (data) => {
+    setValue((prev)=>[...prev,data]);
+
+    
+    reset();
+    setToggle(false);
+  };
+const handleCheckOptions = () =>{
+
+}
   return (
     <Layout>
+      {expensesToggle && (
+        <div className="fixed inset-0 z-50 bg-black/40
+ flex justify-center items-center">
+          <form
+            onSubmit={handleSubmit(expenseAdd)}
+            className="bg-white p-6 rounded-lg shadow-lg space-y-4 w-full max-w-md"
+          >
+            <h2 className="text-lg font-semibold">Add Expense</h2>
+
+            <div className="flex flex-col">
+              <label>Details</label>
+              <input
+                type="text"
+                {...register("details", { required: "Details must be entered" })}
+                className="border p-2 rounded"
+              />
+              {errors.details && (
+                <p className="text-red-500 text-sm">{errors.details.message}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <label>Merchant</label>
+              <input
+                type="text"
+                {...register("merchant", { required: "Merchant is required" })}
+                className="border p-2 rounded"
+              />
+              {errors.merchant && (
+                <span className="text-red-500 text-sm">{errors.merchant.message}</span>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <label>Amount</label>
+              <input
+                type="number"
+                step="0.01"
+                {...register("amount", { required: "Amount is required" })}
+                className="border p-2 rounded"
+              />
+              {errors.amount && (
+                <span className="text-red-500 text-sm">{errors.amount?.message}</span>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <label>Report</label>
+              <input
+                type="text"
+                step="0.01"
+                {...register("report", { required: "Report is required" })}
+                className="border p-2 rounded"
+              />
+              {errors.report && (
+                <span className="text-red-500 text-sm">{errors.report?.message}</span>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <label>Status</label>
+              <input
+                type="text"
+                step="0.01"
+                {...register("status", { required: "Status is required" })}
+                className="border p-2 rounded"
+              />
+              {errors.status && (
+                <span className="text-red-500 text-sm">{errors.status?.message}</span>
+              )}
+            </div>
+
+            <div className="flex justify-end space-x-2">
+              <button
+                type="button"
+                onClick={() => setToggle(false)}
+                className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
       <div className="p-4 sm:p-6 space-y-4 bg-main text-primary">
         {/* Header */}
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Expenses</h2>
           <div className="flex items-center space-x-4">
-            <button className="px-3 py-1 bg-button rounded text-white hover:bg-button-hover">
+            <button
+              onClick={() => setToggle(true)}
+              className="px-3 py-1 bg-button rounded text-white hover:bg-button-hover"
+            >
               Add Expenses
             </button>
             <button>
               <Filter className="w-5 h-5 color-icon hover:color-highlight" />
             </button>
           </div>
+
         </div>
+        {checkToggle ? 
+
+          <div className=" flex  justify-end ">
+  <Button className="hover:border hover:border-red-300">
+    <Trash />
+  </Button>
+</div>: ""
+}
 
         {/* Table Header */}
         <div className="flex flex-row items-center p-3 border-b border-default text-secondary uppercase text-sm font-medium gap-4">
@@ -32,33 +157,27 @@ const Expenses = () => {
         </div>
 
         {/* Table Rows */}
-        <div className="flex flex-row items-center p-3 border-b border-default gap-4">
-          <div className="w-6 flex-shrink-0">
-            <Checkbox />
-          </div>
-          <div className="flex-1 flex flex-col">
-            <span className="text-sm font-medium text-primary">2025-05-29</span>
-            <span className="text-xs text-secondary mt-0.5">Food Cat</span>
-          </div>
-          <div className="flex-1">Merchant Name</div>
-          <div className="w-24 text-right">$345</div>
-          <div className="flex-1">When Added</div>
-          <div className="w-24">Not Paid</div>
-        </div>
+        {
+value ? value.map((expense)=>(
+
 
         <div className="flex flex-row items-center p-3 border-b border-default gap-4">
           <div className="w-6 flex-shrink-0">
-            <Checkbox />
+            <Checkbox onCheckedChange={()=>setCheckToggle(!checkToggle)}/>
           </div>
           <div className="flex-1 flex flex-col">
-            <span className="text-sm font-medium text-primary">2025-05-28</span>
-            <span className="text-xs text-secondary mt-0.5">Travel</span>
+            <span className="text-sm font-medium text-primary">{expense.date}</span>
+            <span className="text-xs text-secondary mt-0.5">{expense.details}</span>
           </div>
-          <div className="flex-1">Another Merchant</div>
-          <div className="w-24 text-right">$120</div>
-          <div className="flex-1">Yesterday</div>
-          <div className="w-24">Paid</div>
+          <div className="flex-1">{expense.merchant}</div>
+          <div className="w-24 text-right">{expense.amount}</div>
+          <div className="flex-1">{expense.report}</div>
+          <div className="w-24">{expense.status}</div>
         </div>
+)):<p>Add expenses</p>
+
+        }
+        
       </div>
     </Layout>
   );
