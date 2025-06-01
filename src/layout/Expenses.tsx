@@ -38,6 +38,8 @@ const Expenses = () => {
   const expenseAdd = (data: Expense) => {
     data.id = value.length;
     data.ischecked = false;
+    data.date = new  Date().toLocaleDateString();
+
     setValue((prev) => [...prev, data]);
     reset();
     setToggle(false);
@@ -46,92 +48,104 @@ const Expenses = () => {
   return (
     <Layout>
       {expensesToggle && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex justify-center items-center">
-          <form
-            onSubmit={handleSubmit(expenseAdd)}
-            className="bg-white p-6 rounded-lg shadow-lg space-y-4 w-full max-w-md"
-          >
-            <h2 className="text-lg font-semibold">Add Expense</h2>
+  <div className="fixed inset-0 z-50 bg-black/40 flex justify-center items-center">
+    <form
+      onSubmit={handleSubmit(expenseAdd)}
+      className="bg-white p-6 rounded-lg shadow-lg space-y-4 w-full max-w-md border border-gray-200"
+    >
+      <h2 className="text-lg font-semibold text-gray-800">Add Expense</h2>
 
-            <div className="flex flex-col">
-              <label>Details</label>
-              <input
-                type="text"
-                {...register("details", { required: "Details must be entered" })}
-                className="border p-2 rounded"
-              />
-              {errors.details && (
-                <p className="text-red-500 text-sm">{errors.details.message}</p>
-              )}
-            </div>
+      {/* Details */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700">Details</label>
+        <input
+          type="text"
+          {...register("details", { required: "Details must be entered" })}
+          className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        {errors.details && (
+          <p className="text-red-600 text-xs">{errors.details.message}</p>
+        )}
+      </div>
 
-            <div className="flex flex-col">
-              <label>Merchant</label>
-              <input
-                type="text"
-                {...register("merchant", { required: "Merchant is required" })}
-                className="border p-2 rounded"
-              />
-              {errors.merchant && (
-                <span className="text-red-500 text-sm">{errors.merchant.message}</span>
-              )}
-            </div>
+      {/* Merchant */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700">Merchant</label>
+        <input
+          type="text"
+          {...register("merchant", { required: "Merchant is required" })}
+          className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        {errors.merchant && (
+          <span className="text-red-600 text-xs">{errors.merchant.message}</span>
+        )}
+      </div>
 
-            <div className="flex flex-col">
-              <label>Amount</label>
-              <input
-                type="number"
-                step="0.01"
-                {...register("amount", { required: "Amount is required" })}
-                className="border p-2 rounded"
-              />
-              {errors.amount && (
-                <span className="text-red-500 text-sm">{errors.amount.message}</span>
-              )}
-            </div>
+      {/* Amount */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700">Amount</label>
+        <input
+          type="number"
+          step="0.01"
+          {...register("amount", { required: "Amount is required" })}
+          className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        {errors.amount && (
+          <span className="text-red-600 text-xs">{errors.amount.message}</span>
+        )}
+      </div>
 
-            <div className="flex flex-col">
-              <label>Report</label>
-              <input
-                type="text"
-                {...register("report", { required: "Report is required" })}
-                className="border p-2 rounded"
-              />
-              {errors.report && (
-                <span className="text-red-500 text-sm">{errors.report.message}</span>
-              )}
-            </div>
+      {/* Report */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700">Report</label>
+        <input
+          type="text"
+          {...register("report", { required: "Report is required" })}
+          className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+        {errors.report && (
+          <span className="text-red-600 text-xs">{errors.report.message}</span>
+        )}
+      </div>
 
-            <div className="flex flex-col">
-              <label>Status</label>
-              <input
-                type="text"
-                {...register("status", { required: "Status is required" })}
-                className="border p-2 rounded"
-              />
-              {errors.status && (
-                <span className="text-red-500 text-sm">{errors.status.message}</span>
-              )}
-            </div>
+      {/* Status */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium text-gray-700">Status</label>
+        <select
+          {...register("status", { required: "Status is required" })}
+          className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          defaultValue=""
+        >
+          <option value="" disabled>Select status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+          <option value="Pending">Pending</option>
+        </select>
+        {errors.status && (
+          <span className="text-red-600 text-xs">{errors.status.message}</span>
+        )}
+      </div>
 
-            <div className="flex justify-end space-x-2">
-              <button
-                type="button"
-                onClick={() => setToggle(false)}
-                className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+      {/* Buttons */}
+      <div className="flex justify-end space-x-2">
+        <button
+          type="button"
+          onClick={() => setToggle(false)}
+          className="px-3 py-1 bg-gray-100 text-gray-800 border border-gray-300 rounded hover:bg-gray-200"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+)}
+
 
       <div className="p-4 sm:p-6 space-y-4 bg-main text-primary">
         {/* Header */}

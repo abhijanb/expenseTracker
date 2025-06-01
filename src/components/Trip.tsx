@@ -197,7 +197,7 @@ const Trips = () => {
                 <span className="text-xs text-secondary mt-0.5">{trip.details}</span>
               </div>
               <div className="flex-1">{trip.merchant}</div>
-              <div className="w-24 text-right">{trip.amount.toFixed(2)}</div>
+              <div className="w-24 text-right">{trip.amount}</div>
               <div className="flex-1">{trip.report}</div>
               <div className="w-24">{trip.status}</div>
             </div>

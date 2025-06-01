@@ -1,3 +1,4 @@
+'use client';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -7,19 +8,22 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-
+import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
 const options = {
   plugins: {
     legend: {
       labels: {
-        color: 'white', // Legend text
+        color: 'white',
       },
     },
     title: {
       display: true,
       text: 'Sales Overview',
-      color: 'white', // Title text
+      color: 'white',
     },
     tooltip: {
       titleColor: 'white',
@@ -29,52 +33,72 @@ const options = {
   scales: {
     x: {
       ticks: {
-        color: 'white', // X-axis label color
+        color: 'white',
       },
       grid: {
-        color: 'rgba(255, 255, 255, 0.1)', // X-axis grid lines
+        color: 'rgba(255, 255, 255, 0.1)',
       },
     },
     y: {
       ticks: {
-        color: 'white', // Y-axis label color
+        color: 'white',
       },
       grid: {
-        color: 'rgba(255, 255, 255, 0.1)', // Y-axis grid lines
+        color: 'rgba(255, 255, 255, 0.1)',
       },
     },
   },
 };
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+const DaySpendBar = () => {
+  const [labels, setLabels] = useState<string[]>([]);
+  const [dataPoints, setDataPoints] = useState<number[]>([]);
 
-interface Props{
-  label:string[],
-  datas:number[]
-}
+  useEffect(() => {
+    const trips = JSON.parse(localStorage.getItem('trips') || '[]');
+    const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
 
-const DaySpendBar = ({label,datas}:Props) => {
-  const data = {
-  labels: label,
-  datasets: [
-    {
-      label: 'Sales',
-      data: datas,
-      backgroundColor:  ['rgba(255, 99, 132, 0.5)',  // Jan
-        'rgba(54, 162, 235, 0.5)',  // Feb
-        'rgba(255, 206, 86, 0.5)',] ,
-    },
-  ],
-};
+    // Map: date -> total amount
+    const dailyTotals: { [date: string]: number } = {};
+
+    expenses.forEach((expense: { tripId: string; amount: number; date: string }) => {
+      const date = new Date(expense.date).toLocaleDateString(); // Normalize date
+      if (!dailyTotals[date]) {
+        dailyTotals[date] = 0;
+      }
+      dailyTotals[date] += expense.amount;
+    });
+
+    // Sort by date (optional)
+    const sortedDates = Object.keys(dailyTotals).sort((a, b) => {
+      return new Date(a).getTime() - new Date(b).getTime();
+    });
+
+    setLabels(sortedDates);
+    setDataPoints(sortedDates.map(date => dailyTotals[date]));
+  }, []);
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: 'Expenses',
+        data: dataPoints,
+        backgroundColor: dataPoints.map(
+          (_, idx) =>
+            ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 192, 0.5)', 'rgba(153, 102, 255, 0.5)'][idx % 5]
+        ),
+      },
+    ],
+  };
 
   return (
     <div className="w-full sm:w-1/2 border border-gray-300 bg-gray-600 rounded-sm p-4 min-h-full text-white">
       <h2 className="text-lg font-semibold border-b border-gray-400 mb-2 pb-1">
         Day Spend Bar
       </h2>
-      {/* Placeholder for bar graph or spend data */}
-      <div className="h-32 bg-gray-500 rounded flex items-center justify-center">
-        <span className="text-sm text-white"><Bar data={data} options={options}/></span>
+      <div className="h-64 bg-gray-500 rounded flex items-center justify-center">
+        <Bar data={chartData} options={options} />
       </div>
     </div>
   );

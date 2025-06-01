@@ -3,11 +3,10 @@ import QuickAccess from "./QuickAccess";
 import RecentExpenses from "./RecentExpenses";
 import Bar from "./Bar";
 import Layout from "./Layout";
+import WeeklySpendBar from "./WeekBar";
 
 const Dashboard = () => {
-  const barData1 = [100, 200, 150, 34];
-  const barLabels1 = ["Jan", "Feb", "Mar", "Apr"];
-
+  
   return (
     <Layout>
       {/* Main Content */}
@@ -20,8 +19,8 @@ const Dashboard = () => {
         <QuickAccess />
 
         <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
-          <Bar datas={barData1} label={barLabels1} />
-          <Bar datas={barData1} label={barLabels1} />
+          <Bar   />
+          <WeeklySpendBar />
         </div>
       </div>
     </Layout>

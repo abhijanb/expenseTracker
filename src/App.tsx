@@ -2,7 +2,7 @@ import Dashboard from "./layout/Dashboard";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Expenses from "./layout/Expenses";
 import Trip from "./layout/Trip";
-import Apps from "./layout/a";
+// import Apps from "./layout/a";
 const App = () => {
   return (
     <div className="w-screen h-screen flex bg-main">
@@ -12,7 +12,7 @@ const App = () => {
         <Route path="/" element={<Dashboard />} />
         <Route path="/expenses" element={<Expenses />} />
         <Route path="/trips" element={<Trip />} />
-        <Route path="/test" element={<Apps />} />
+        {/* <Route path="/test" element={<Apps />} /> */}
         {/* <Route path="/approval" element={<Approval />} /> */}
       </Routes>
       </BrowserRouter>
