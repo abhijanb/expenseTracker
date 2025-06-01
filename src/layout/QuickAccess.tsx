@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 
 const QuickAccess = () => {
@@ -7,10 +8,8 @@ const QuickAccess = () => {
         Quick Access
       </h1>
       <div className="flex flex-col sm:flex-row flex-wrap gap-2">
-        <Button className="flex-1 sm:flex-none">+ New Expense</Button>
-        <Button className="flex-1 sm:flex-none">+ New Receipt</Button>
-        <Button className="flex-1 sm:flex-none">+ Create Receipt</Button>
-        <Button className="flex-1 sm:flex-none">+ Create Trip</Button>
+        <Link  to={"/expenses"}><Button className="flex-1 sm:flex-none">+ New Expense</Button></Link>
+        <Link to={"/trips"}><Button className="flex-1 sm:flex-none">+ Create Trip</Button></Link>
       </div>
     </div>
   );
