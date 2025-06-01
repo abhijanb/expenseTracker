@@ -1,4 +1,4 @@
-import {  Filter, Trash } from "lucide-react";
+import { Filter, Trash } from "lucide-react";
 import { Checkbox } from "../components/ui/checkbox";
 import Layout from "./Layout";
 import { useState } from "react";
@@ -6,20 +6,39 @@ import { useForm } from "react-hook-form";
 import UseLocalStorage from "../hook/UseLocalStorage";
 import { Button } from "../components/ui/button";
 
+// 1. Define Expense type
+type Expense = {
+  id: number;
+  details: string;
+  merchant: string;
+  amount: number;
+  report: string;
+  status: string;
+  date?: string;
+  ischecked: boolean;
+};
+
 const Expenses = () => {
   const [expensesToggle, setToggle] = useState(false);
-  const [value,setValue] = UseLocalStorage("expenses",[])
+
+  // 2. UseLocalStorage with type
+  const [value, setValue] = UseLocalStorage<Expense[]>("expenses", []);
+
+  // 3. Typed useForm
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
-const toggle = value.some((e)=>e.ischecked === true);
-  const expenseAdd = (data) => {
+  } = useForm<Expense>();
+
+  const toggle = value.some((e) => e.ischecked === true);
+
+  // 4. Typed form submit
+  const expenseAdd = (data: Expense) => {
     data.id = value.length;
-    data.ischecked=false;
-    setValue((prev)=>[...prev,data]);
+    data.ischecked = false;
+    setValue((prev) => [...prev, data]);
     reset();
     setToggle(false);
   };
@@ -27,8 +46,7 @@ const toggle = value.some((e)=>e.ischecked === true);
   return (
     <Layout>
       {expensesToggle && (
-        <div className="fixed inset-0 z-50 bg-black/40
- flex justify-center items-center">
+        <div className="fixed inset-0 z-50 bg-black/40 flex justify-center items-center">
           <form
             onSubmit={handleSubmit(expenseAdd)}
             className="bg-white p-6 rounded-lg shadow-lg space-y-4 w-full max-w-md"
@@ -68,31 +86,31 @@ const toggle = value.some((e)=>e.ischecked === true);
                 className="border p-2 rounded"
               />
               {errors.amount && (
-                <span className="text-red-500 text-sm">{errors.amount?.message}</span>
+                <span className="text-red-500 text-sm">{errors.amount.message}</span>
               )}
             </div>
+
             <div className="flex flex-col">
               <label>Report</label>
               <input
                 type="text"
-                step="0.01"
                 {...register("report", { required: "Report is required" })}
                 className="border p-2 rounded"
               />
               {errors.report && (
-                <span className="text-red-500 text-sm">{errors.report?.message}</span>
+                <span className="text-red-500 text-sm">{errors.report.message}</span>
               )}
             </div>
+
             <div className="flex flex-col">
               <label>Status</label>
               <input
                 type="text"
-                step="0.01"
                 {...register("status", { required: "Status is required" })}
                 className="border p-2 rounded"
               />
               {errors.status && (
-                <span className="text-red-500 text-sm">{errors.status?.message}</span>
+                <span className="text-red-500 text-sm">{errors.status.message}</span>
               )}
             </div>
 
@@ -130,16 +148,15 @@ const toggle = value.some((e)=>e.ischecked === true);
               <Filter className="w-5 h-5 color-icon hover:color-highlight" />
             </button>
           </div>
-
         </div>
-        {toggle ? 
 
-          <div className=" flex  justify-end ">
-  <Button className="hover:border hover:border-red-300">
-    <Trash />
-  </Button>
-</div>: ""
-}
+        {toggle && (
+          <div className="flex justify-end">
+            <Button className="hover:border hover:border-red-300">
+              <Trash />
+            </Button>
+          </div>
+        )}
 
         {/* Table Header */}
         <div className="flex flex-row items-center p-3 border-b border-default text-secondary uppercase text-sm font-medium gap-4">
@@ -154,35 +171,34 @@ const toggle = value.some((e)=>e.ischecked === true);
         </div>
 
         {/* Table Rows */}
-        {
-value ? value.map((expense,index)=>(
-
-
-        <div key={index} className="flex flex-row items-center p-3 border-b border-default gap-4">
-          <div className="w-6 flex-shrink-0">
-            <Checkbox checked={expense.ischecked} onCheckedChange={(checked)=>{
-              setValue((prev)=> 
-                prev.map((p,i)=>
-                 index === i ? { ...p,ischecked : checked} : p
-                )
-              
-            );
-          }
-            } />
-          </div>
-          <div className="flex-1 flex flex-col">
-            <span className="text-sm font-medium text-primary">{expense.date}</span>
-            <span className="text-xs text-secondary mt-0.5">{expense.details}</span>
-          </div>
-          <div className="flex-1">{expense.merchant}</div>
-          <div className="w-24 text-right">{expense.amount}</div>
-          <div className="flex-1">{expense.report}</div>
-          <div className="w-24">{expense.status}</div>
-        </div>
-)):<p>Add expenses</p>
-
-        }
-        
+        {value.length > 0 ? (
+          value.map((expense, index) => (
+            <div key={index} className="flex flex-row items-center p-3 border-b border-default gap-4">
+              <div className="w-6 flex-shrink-0">
+                <Checkbox
+                  checked={expense.ischecked}
+                  onCheckedChange={(checked) => {
+                    setValue((prev) =>
+                      prev.map((p, i) =>
+                        index === i ? { ...p, ischecked: !!checked } : p
+                      )
+                    );
+                  }}
+                />
+              </div>
+              <div className="flex-1 flex flex-col">
+                <span className="text-sm font-medium text-primary">{expense.date}</span>
+                <span className="text-xs text-secondary mt-0.5">{expense.details}</span>
+              </div>
+              <div className="flex-1">{expense.merchant}</div>
+              <div className="w-24 text-right">{expense.amount}</div>
+              <div className="flex-1">{expense.report}</div>
+              <div className="w-24">{expense.status}</div>
+            </div>
+          ))
+        ) : (
+          <p>Add expenses</p>
+        )}
       </div>
     </Layout>
   );

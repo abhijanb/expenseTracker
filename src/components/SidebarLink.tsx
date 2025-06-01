@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Avatar from "./Avatar";
-import { House,BanknoteArrowDown, Bus ,PlaneLanding  } from "lucide-react";
+import { House,BanknoteArrowDown, Bus   } from "lucide-react";
 interface Sidebar {
   name: string;
   icon: React.ReactNode;
