@@ -1,19 +1,30 @@
 import { useState } from "react";
+import type { ReactNode } from "react";
+
 import SidebarLink from "../components/SidebarLink";
 
-const Layout = (props) => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="min-w-full flex flex-col sm:flex-row bg-main text-primary relative h-screen overflow-hidden">
       {/* Mobile Top Bar */}
       <div className="sm:hidden flex items-center justify-between p-4 bg-sidebar z-20">
-        <button onClick={() => setIsSidebarOpen(true)} className="text-sidebar">
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className="text-sidebar"
+          aria-label="Open sidebar menu"
+        >
           <svg
             className="w-6 h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -36,6 +47,7 @@ const Layout = (props) => {
           <button
             onClick={() => setIsSidebarOpen(false)}
             className="text-sidebar text-xl"
+            aria-label="Close sidebar menu"
           >
             ✕
           </button>
@@ -44,18 +56,18 @@ const Layout = (props) => {
       </div>
 
       {/* Sidebar for medium+ screens (always visible) */}
-      <div
+      <aside
         className="hidden sm:flex flex-col bg-sidebar p-4
           w-56 md:w-64 lg:w-72 xl:w-80
           overflow-y-auto
           h-full"
       >
         <SidebarLink />
-      </div>
+      </aside>
 
       {/* Main Content */}
       <main className="flex-1 p-4 sm:p-6 overflow-y-auto h-full text-primary">
-        {props.children}
+        {children}
       </main>
     </div>
   );

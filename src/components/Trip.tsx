@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import UseLocalStorage from "../hook/UseLocalStorage";
 
+type CheckedState = boolean | "indeterminate";
+
 type TripForm = {
   id: string;
   details: string;
@@ -40,10 +42,10 @@ const Trips = () => {
     setToggle(false);
   };
 
-  const toggleCheck = (id: string, checked: boolean | undefined) => {
+  const toggleCheck = (id: string, checked: CheckedState) => {
     setValue((prev) =>
       prev.map((trip) =>
-        trip.id === id ? { ...trip, ischecked: checked ?? false } : trip
+        trip.id === id ? { ...trip, ischecked: checked === true } : trip
       )
     );
   };
@@ -87,7 +89,10 @@ const Trips = () => {
               <input
                 type="number"
                 step="0.01"
-                {...register("amount", { required: "Amount is required", valueAsNumber: true })}
+                {...register("amount", {
+                  required: "Amount is required",
+                  valueAsNumber: true,
+                })}
                 className="border p-2 rounded"
               />
               {errors.amount && (
